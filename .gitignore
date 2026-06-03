@@ -1,0 +1,8 @@
+codex-logs
+Claude Conversations/
+*.py[codz]
+*$py.class
+
+graphify-out
+.codegraph
+
