@@ -6,3 +6,7 @@ Claude Conversations/
 graphify-out
 .codegraph
 .superpowers/
+
+*.FCStd
+*.FCBak 
+out

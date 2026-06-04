@@ -2,11 +2,18 @@
 import os
 import sys
 
+
+FREECAD_LIB_PATH = "/home/an/.program/freecad/squashfs-root/usr/lib"
+sys.path.append(FREECAD_LIB_PATH) #<-- added, otherwise FreeCAD is not found
+
 import FreeCAD as App
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 if SCRIPT_DIR not in sys.path:
     sys.path.insert(0, SCRIPT_DIR)
+
+
+print(f"script dir: {SCRIPT_DIR}")
 
 from rv_exterior_config import DOC_NAME, OUTPUT_FILE, P
 
@@ -274,6 +281,8 @@ def build_accessories(doc, assemblies):
 
 def main():
     """Build and save the RV exterior document."""
+
+    print("main")
     doc = fresh_document()
     root = doc.addObject("App::Part", "RV_Exterior_Asm")
     root.Label = "RV Exterior"
@@ -305,3 +314,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+# main()
