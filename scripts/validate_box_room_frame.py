@@ -59,6 +59,7 @@ left_window_center_x = length * params["left_front_window_center_ratio"]
 left_window_x0 = left_window_center_x - left_window_width / 2.0
 left_window_x1 = left_window_center_x + left_window_width / 2.0
 left_window_top_z = left_window_bottom_z + left_window_height
+first_bay_x = length / params["bay_count"]
 toilet_window_width = params["left_rear_toilet_window_width"]
 toilet_window_height = params["left_rear_toilet_window_height"]
 toilet_window_bottom_z = params["left_rear_toilet_window_bottom_z"]
@@ -72,6 +73,9 @@ rear_mount_y0 = width * 0.25
 rear_mount_y1 = width * 0.75
 rear_lower_mount_z = params["height"] * 0.25
 rear_upper_mount_z = params["height"] * 0.70
+bottom_secondary_long_rail_y0 = rear_mount_y0
+bottom_secondary_long_rail_y1 = rear_mount_y1
+bottom_secondary_transverse_xs = [length * i / (params["bay_count"] * 2) for i in range(1, params["bay_count"] * 2, 2)]
 rear_carrier_force_n = (
     (
         params["rear_motorcycle_mass_kg"]
@@ -85,7 +89,11 @@ rear_carrier_force_n = (
 assert door_width == 800.0, f"entry door width must be 800 mm, got {door_width}"
 assert coffee_window_height == 1500.0, f"right front coffee window height must be 1500 mm, got {coffee_window_height}"
 assert window_width == 1200.0, f"right rear window width must be 1200 mm, got {window_width}"
-assert left_window_width == 1200.0, f"left front window width must be 1200 mm, got {left_window_width}"
+assert left_window_width == 1612.0, f"left front window width must be 1612 mm, got {left_window_width}"
+assert left_window_x1 == first_bay_x, (
+    f"left front window rear edge must align with first bay at {first_bay_x} mm, "
+    f"got {left_window_x1} mm"
+)
 assert toilet_window_width == 800.0, f"left rear toilet window width must be 800 mm, got {toilet_window_width}"
 assert params["rear_motorcycle_mass_kg"] == 250.0
 assert params["rear_rack_mass_kg"] == 80.0
@@ -119,6 +127,11 @@ rear_left_lower_diagonal = beam_by_name(beams, "rear_carrier_left_lower_diagonal
 rear_right_lower_diagonal = beam_by_name(beams, "rear_carrier_right_lower_diagonal")
 rear_left_upper_diagonal = beam_by_name(beams, "rear_carrier_left_upper_diagonal")
 rear_right_upper_diagonal = beam_by_name(beams, "rear_carrier_right_upper_diagonal")
+bottom_secondary_long_rail_1 = beam_by_name(beams, "bottom_secondary_long_rail_y612_z0")
+bottom_secondary_long_rail_2 = beam_by_name(beams, "bottom_secondary_long_rail_y1838_z0")
+bottom_secondary_transverse_1 = beam_by_name(beams, "bottom_secondary_transverse_x1100_z0")
+bottom_secondary_transverse_2 = beam_by_name(beams, "bottom_secondary_transverse_x3300_z0")
+bottom_secondary_transverse_3 = beam_by_name(beams, "bottom_secondary_transverse_x5500_z0")
 
 assert_point(front_jamb["start"], (door_x0, width, 0.0))
 assert_point(front_jamb["end"], (door_x0, width, door_height))
@@ -174,6 +187,16 @@ assert_point(rear_left_upper_diagonal["start"], (rear_reinforcement_x, rear_moun
 assert_point(rear_left_upper_diagonal["end"], (length, 0.0, params["height"]))
 assert_point(rear_right_upper_diagonal["start"], (rear_reinforcement_x, rear_mount_y1, rear_upper_mount_z))
 assert_point(rear_right_upper_diagonal["end"], (length, width, params["height"]))
+assert_point(bottom_secondary_long_rail_1["start"], (0.0, bottom_secondary_long_rail_y0, 0.0))
+assert_point(bottom_secondary_long_rail_1["end"], (length, bottom_secondary_long_rail_y0, 0.0))
+assert_point(bottom_secondary_long_rail_2["start"], (0.0, bottom_secondary_long_rail_y1, 0.0))
+assert_point(bottom_secondary_long_rail_2["end"], (length, bottom_secondary_long_rail_y1, 0.0))
+assert_point(bottom_secondary_transverse_1["start"], (bottom_secondary_transverse_xs[0], 0.0, 0.0))
+assert_point(bottom_secondary_transverse_1["end"], (bottom_secondary_transverse_xs[0], width, 0.0))
+assert_point(bottom_secondary_transverse_2["start"], (bottom_secondary_transverse_xs[1], 0.0, 0.0))
+assert_point(bottom_secondary_transverse_2["end"], (bottom_secondary_transverse_xs[1], width, 0.0))
+assert_point(bottom_secondary_transverse_3["start"], (bottom_secondary_transverse_xs[2], 0.0, 0.0))
+assert_point(bottom_secondary_transverse_3["end"], (bottom_secondary_transverse_xs[2], width, 0.0))
 
 for prefix, x0, x1, y, bottom_z, top_z in (
     ("right_rear_window", window_x0, window_x1, width, window_bottom_z, window_top_z),

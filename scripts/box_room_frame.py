@@ -67,13 +67,15 @@ PARAMS = {
     # 右侧后部床头上方窗户中心在车长方向的位置比例。
     "right_rear_window_center_ratio": 0.82,
     # 人面向车头、向车尾看时左手侧车头部卡座茶几旁窗户宽度。
-    "left_front_window_width": 1200.0,
+    # 窗后边缘延伸到第一个分仓纵梁位置。
+    "left_front_window_width": 1612.0,
     # 左侧车头部卡座茶几旁窗户高度。
     "left_front_window_height": 600.0,
     # 左侧车头部卡座茶几旁窗户底边离地高度。
     "left_front_window_bottom_z": 1600.0,
     # 左侧车头部卡座茶几旁窗户中心在车长方向的位置比例。
-    "left_front_window_center_ratio": 0.18,
+    # 该比例对应窗后边缘对齐第一个分仓纵梁。
+    "left_front_window_center_ratio": 0.2112121212121212,
     # 人面向车头、向车尾看时左手侧中部偏后的厕所窗宽度。
     "left_rear_toilet_window_width": 800.0,
     # 左手侧中部偏后的厕所窗高度。
@@ -931,6 +933,31 @@ def build_frame(params):
             f"center_long_rail_z{int(z)}",
             (0.0, width / 2.0, z),
             (length, width / 2.0, z),
+            tube,
+            "inner",
+        )
+
+    # 底面加密加强：增加两道次纵梁和三道次横梁，把底部荷载更直接地分散到
+    # 侧墙立柱、端面框架和中部分仓站位上。
+    bottom_secondary_long_rail_y0 = width * 0.25
+    bottom_secondary_long_rail_y1 = width * 0.75
+    for y in (bottom_secondary_long_rail_y0, bottom_secondary_long_rail_y1):
+        add_beam(
+            beams,
+            seen,
+            f"bottom_secondary_long_rail_y{int(round(y))}_z0",
+            (0.0, y, z0),
+            (length, y, z0),
+            tube,
+            "inner",
+        )
+    for x in (length / 6.0, length / 2.0, length * 5.0 / 6.0):
+        add_beam(
+            beams,
+            seen,
+            f"bottom_secondary_transverse_x{int(round(x))}_z0",
+            (x, y0, z0),
+            (x, y1, z0),
             tube,
             "inner",
         )
