@@ -1267,3 +1267,4 @@ if __name__ == "__main__":
     print(f'X brace tube size: {PARAMS["x_brace_tube"]} mm')
     print(f'Bay count: {PARAMS["bay_count"]}')
     print(f"Beam count: {len(frame_beams)}")
+    print(f"freecad /tmp/a.FCStd")
